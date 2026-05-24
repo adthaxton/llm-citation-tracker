@@ -1,30 +1,51 @@
 # llm-citation-tracker
 
-A lightweight Python tool for tracking brand citations in LLM responses. Queries the Perplexity API across a set of target prompts and logs whether your brand appears in each response, along with the surrounding context snippet.
-
-Built by an SEO practitioner who started tracking LLM citations manually before dedicated tools existed. This script automates the prompt-by-prompt logging workflow.
+A lightweight Python toolkit for tracking brand citations in LLM responses. Built by an SEO practitioner who started logging LLM citations manually before dedicated tools existed.
 
 ---
 
-## What it does
+## Tools
 
-- Sends a list of prompts to the Perplexity API (which uses live web search)
-- Checks each response for your brand name
-- Logs results to a CSV with timestamp, prompt, cited (YES/NO), context snippet, and full response
-- Appends on each run so you can track citation presence over time
+### citation_tracker.py
+Track whether your brand appears across a set of prompts you define. You write the prompts, it runs them, logs citation presence and context snippets to CSV, and appends on each run so you can track trends over time.
 
----
+Good for: ongoing monitoring with a fixed prompt set.
 
-## Example output (citations_log.csv)
+### prompt_variation_tester.py
+Auto-generates prompt variations around any brand and topic, then tests each one. Reveals which question phrasings are most likely to surface your brand in LLM responses - and which aren't. Works for any industry.
 
-| timestamp | brand | model | prompt | cited | snippet |
-|---|---|---|---|---|---|
-| 2026-05-23 09:14:02 | Acme SEO | llama-3.1-sonar... | What are the best automotive SEO agencies? | YES | ...Acme SEO is frequently mentioned for their multi-location... |
-| 2026-05-23 09:14:08 | Acme SEO | llama-3.1-sonar... | Who are the top SEO companies for car dealerships? | NO | |
+Good for: one-time research, discovering which prompt angles work, informing your GEO content strategy.
 
 ---
 
-## Setup
+## Example output (variation_summary.txt)
+
+```
+======================================================================
+PROMPT VARIATION TEST SUMMARY
+Run: 2026-05-23 09:14:02
+Brand: Acme SEO
+Topic: automotive SEO agencies
+Citation rate: 4/10 (40%)
+======================================================================
+
+CITED — prompts where brand appeared:
+  1. What are the best SEO agencies for car dealerships?
+     -> ...Acme SEO is frequently cited for their multi-location dealership work...
+  2. Who specializes in automotive digital marketing?
+  3. Top local SEO companies for auto dealers
+  4. Best SEO firm for a Ford dealership?
+
+NOT CITED — prompts where brand did not appear:
+  1. Which companies do SEO for vehicle inventory pages?
+  2. How do I improve my dealership website's Google ranking?
+  ...
+======================================================================
+```
+
+---
+
+## Setup (both tools)
 
 **1. Install dependencies**
 
@@ -42,9 +63,11 @@ Sign up at [perplexity.ai/settings/api](https://www.perplexity.ai/settings/api).
 PERPLEXITY_API_KEY=your_key_here
 ```
 
-**4. Edit `citation_tracker.py`**
+---
 
-Set your brand name and prompts at the top of the file:
+## citation_tracker.py usage
+
+Edit the config at the top of the file:
 
 ```python
 BRAND = "Your Brand Name"
@@ -56,34 +79,56 @@ PROMPTS = [
 ]
 ```
 
-**5. Run it**
+Run it:
 
 ```bash
 python citation_tracker.py
 ```
 
+Output: `citations_log.csv`
+
+---
+
+## prompt_variation_tester.py usage
+
+Edit the config at the top of the file:
+
+```python
+BRAND = "Your Brand Name"
+TOPIC = "your industry or niche"  # e.g. "personal injury law firms", "B2B SaaS SEO"
+NUM_VARIATIONS = 10
+```
+
+Run it:
+
+```bash
+python prompt_variation_tester.py
+```
+
+Output: `variation_results.csv` and `variation_summary.txt`
+
 ---
 
 ## Tracking over time
 
-Run the script on a regular cadence (weekly, biweekly) without deleting `citations_log.csv`. Each run appends new rows with a fresh timestamp, so you can chart citation rate trends in a spreadsheet or BI tool over time.
+Run either script on a regular cadence (weekly, biweekly) without deleting the output CSV. Each run appends new rows with a fresh timestamp so you can chart citation rate trends in a spreadsheet or BI tool.
 
 ---
 
 ## Notes
 
-- This tool checks Perplexity specifically. ChatGPT and Gemini do not currently offer public APIs that replicate their consumer chat interfaces.
-- Citation presence is a simple string match (case-insensitive). It will catch exact brand name matches but not paraphrases.
-- The Perplexity `sonar` models use live web search, so results reflect current web content, not static training data.
+- Both tools query Perplexity specifically. ChatGPT and Gemini do not currently offer public APIs that replicate their consumer chat interfaces.
+- Citation presence is a simple string match (case-insensitive). It catches exact brand name matches but not paraphrases.
+- Perplexity `sonar` models use live web search, so results reflect current web content, not static training data.
 
 ---
 
-## Roadmap ideas
+## Roadmap
 
-- [ ] Multi-model support (add Claude, Gemini API)
-- [ ] Prompt variation testing (same intent, different phrasing)
+- [ ] Multi-model support (Claude, Gemini API)
 - [ ] Automated weekly scheduling via cron
 - [ ] Simple HTML report output
+- [ ] Sentiment analysis on citation context
 
 ---
 
