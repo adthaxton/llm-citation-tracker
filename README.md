@@ -1,3 +1,4 @@
+
 # llm-citation-tracker
 
 A lightweight Python toolkit for tracking brand citations in LLM responses. Built by an SEO practitioner who started logging LLM citations manually before dedicated tools existed.
