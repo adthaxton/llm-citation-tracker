@@ -135,4 +135,4 @@ Run either script on a regular cadence (weekly, biweekly) without deleting the o
 ## Author
 
 Angie Thaxton — Senior SEO Strategist specializing in GEO and AI search visibility  
-[linkedin.com/in/adthaxton](https://linkedin.com/in/adthaxton) | [myainotes.com](https://myainotes.com)
+[linkedin.com/in/adthaxton](https://linkedin.com/in/adthaxton) 
